@@ -1,20 +1,49 @@
-import React, { Component } from 'react';
-import logo from './logo.svg';
-import Signup from './Signup'
-import './App.css';
+const React = require('react');
+const Component = require('react/Component');
+const Signin = require('./Signin.jsx');
+const Signup = require('./Signup.jsx');
+const GuardedSignup = require('./GuardedSignup.jsx');
+const UserStatus = require('UserStatus.jsx');
+const UserSettings = require('./UserSettings.js');
 
 class App extends Component {
+  constructor (props) {
+    super(props)
+    this.signinStatusHandler = this.signinStatusHandler.bind(this);
+    this.signupStatusHandler = this.signupStatusHandler.bind(this);
+
+    this.state = {
+      signinStatus: '',
+      signupStatus: '',
+    };
+  }
+
+  signinStatusHandler(signinStatus) {
+    this.setState({signinStatus});
+  }
+
+  signupStatusHandler(signupStatus) {
+    this.setState({signupStatus});
+  }
+
   render() {
     return (
       <div className="App">
         <div className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h2>Welcome to React</h2>
+          <h2>Ferrum Health Dev Portal</h2>
         </div>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
-        <Signup />
+        <Signin statusHandler={this.signinStatusHandler}/>
+        {this.state.signinStatus}
+        <hr />
+        <GuardedSignup statusHandler={this.signupStatusHandler}/>
+        {this.state.signupStatus}
+        <hr />
+        <Signup statusHandler={this.signupStatusHandler}/>
+        {this.state.signupStatus}
+        <hr />
+        <UserStatus />
+        <hr />
+        <UserSettings />
       </div>
     );
   }

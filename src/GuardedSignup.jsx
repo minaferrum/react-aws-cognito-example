@@ -1,16 +1,15 @@
 import React, { Component } from 'react';
-import { createUser, verifyUser } from './Cognito';
+import { emailNewUserSignup, createLimitedUserUser } from './Cognito';
 import PropTypes from 'prop-types';
 
-class Signup extends Component {
+class GuardedSignup extends Component {
   constructor (props) {
     super(props)
-    this.changeEmail = this.changeEmail.bind(this)
-    this.changeUsername = this.changeUsername.bind(this)
-    this.changePassword = this.changePassword.bind(this)
-    this.changeVerifyCode = this.changeVerifyCode.bind(this)
-    this.handleSignupSubmit = this.handleSignupSubmit.bind(this)
-    this.handleVerifySubmit = this.handleVerifySubmit.bind(this)
+    this.changeEmail = this.changeEmail.bind(this);
+    this.changePassword = this.changePassword.bind(this);
+    this.changeUsername = this.changeUsername.bind(this);
+    this.changeVerifyCode = this.changeVerifyCode.bind(this);
+    this.guardedSignup = this.guardedSignup.bind(this);
 
     this.state = {
       email: '',
@@ -37,11 +36,12 @@ class Signup extends Component {
     this.setState({ verifyCode: e.target.value })
   }
 
-  handleSignupSubmit (e) {
+  guardedSignup (e) {
+    e.preventDefault();
+
     const { username, email, password } = this.state;
-    e.preventDefault()
-    console.log('Entered:', this.state)
-    createUser(username, email, password, (err, result) => {
+
+    createLimitedUserUser(username, email, password, (err, result) => {
       if (err) {
         console.log(err);
         this.props.statusHandler(err.toString());
@@ -50,26 +50,23 @@ class Signup extends Component {
       console.log(result.user)
       this.setState({ showVerification: true })
     });
-  }
 
-  handleVerifySubmit (e) {
-    e.preventDefault()
-    verifyUser(this.state.username, this.state.verifyCode, (err, result) => {
+    emailNewUserSignup(this.state.username, this.state.verifyCode, (err, result) => {
       if (err) {
         console.log(err)
-        return
+        return;
       }
       alert(result)
-    })
+    });
   }
 
   render () {
     return (
       <div className="Signup">
-        <h2>Sign Up</h2>
+        <h2>Request Account</h2>
         {
           !this.state.showVerification ? (
-            <form onSubmit={this.handleSignupSubmit}>
+            <form onSubmit={this.guardedSignup}>
               <div>
                 <input
                   value={this.state.email}
@@ -96,7 +93,7 @@ class Signup extends Component {
               </div>
             </form>
           ) : (
-            <form onSubmit={this.handleVerifySubmit}>
+            <form onSubmit={this.guardedSignup}>
               <input
                 value={this.state.verifyCode}
                 onChange={this.changeVerifyCode}
@@ -110,8 +107,8 @@ class Signup extends Component {
   }
 }
 
-Signup.propTypes = {
+GuardedSignup.propTypes = {
   statusHandler: PropTypes.func,
 };
 
-export default Signup
+export default GuardedSignup
