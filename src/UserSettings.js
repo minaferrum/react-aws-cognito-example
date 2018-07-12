@@ -55,6 +55,7 @@ class UserSettings extends Component {
         {this.state.email &&
           <div>
             <h2>User Settings</h2>
+            <h2>Change Password</h2>
             <span>{this.state.email}</span>
             <form onSubmit={this.handlePasswordChange}>
               <div>

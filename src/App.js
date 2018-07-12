@@ -1,10 +1,9 @@
-const React = require('react');
-const Component = require('react/Component');
-const Signin = require('./Signin.jsx');
-const Signup = require('./Signup.jsx');
-const GuardedSignup = require('./GuardedSignup.jsx');
-const UserStatus = require('UserStatus.jsx');
-const UserSettings = require('./UserSettings.js');
+import React, { Component } from 'react';
+import Signin from './Signin';
+import Signup from './Signup';
+import GuardedSignup from './GuardedSignup';
+import UserStatus from './UserStatus';
+import UserSettings from './UserSettings';
 
 class App extends Component {
   constructor (props) {
